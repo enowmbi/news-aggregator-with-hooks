@@ -3,8 +3,8 @@ import Header from './components/header';
 import Footer from './components/footer';
 import Main from './components/main';
 import './App.css';
-import { getSources }  from './sources';
-import {getArticles } from './articles';
+// import { getSources }  from './sources';
+import Articles from './components/articles';
 import axios from 'axios';
 
 class App extends Component{
@@ -16,21 +16,21 @@ class App extends Component{
         newsArticles:[]
     }
 
-    async componentDidMount(){
+    componentDidMount(){
         const url = 'https://newsapi.org/v1/sources?language=en&apiKey=c493e95394d444458f3488052428deab' 
         //connect to the api here
         try{
-            const { data: newsSources } = await axios.get(url);
+            const { data: newsSources } = axios.get(url);
             const sources = newsSources.sources;
             this.setState({ newsSources:sources });
         }
         catch(error){
             console.log(error);
-            const newsSources = getSources();
-            this.setState({newsSources});
+            // const newsSources = getSources();
+            // this.setState({newsSources});
         }
 
-        handleNewsSourceSelectionChanged =(selected_source)=>{
+       const  handleNewsSourceSelectionChanged =(selected_source)=>{
             //change the source and update state 
             const sources  = [...this.state.newsSources];
             const userSelectedSource = sources.find(source =>source.id === selected_source.trim());
@@ -40,26 +40,26 @@ class App extends Component{
             this.handleDisplayArticles(selected_source)
         }
 
-        async handleDisplayArticles(selected_source){
+        const handleDisplayArticles=(selected_source)=>{
             //get articles from url based on source
             const url = `https://newsapi.org/v1/articles?language=en&source=${selected_source}&apiKey=c493e95394d444458f3488052428deab`;
 
             try{
-                const { data: sources } = await axios.get(url);
+                const { data: sources } = axios.get(url);
                 const articles = sources.articles;
                 this.setState({newsArticles: articles});
             }
             catch(ex){
-                //get sample data - static from sources.js - due to internet connection issues
-                const newsArticles = getArticles(selected_source);
-                console.log(newsArticles)
-                this.setState({newsArticles: newsArticles});
+                // get sample data - static from sources.js - due to internet connection issues
+                // const newsArticles = getArticles(selected_source);
+                // console.log(newsArticles)
+                // this.setState({newsArticles: newsArticles});
                 console.log( ex + ": Can't connect to the api end point") 
                 // if there are errors update the state
                 this.setState({errors: ex + "Can't connect to the api end point"});
             }
 
-        }
+        }}
 
         render(){
             return(

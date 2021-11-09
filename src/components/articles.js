@@ -7,7 +7,6 @@ const Articles = (props) =>{
         <ul id="listOfArticles" className="media-list">
         {
             props.articles.map(article =>(
-
                 <li key ={`${article.id}-${article.title}`}>
                 <Article 
                 id = {article.id}
@@ -21,12 +20,10 @@ const Articles = (props) =>{
                 content = {article.content}
                 />
                 </li>
-
             )
             )
         }
         </ul>
-
     )
 }
 
