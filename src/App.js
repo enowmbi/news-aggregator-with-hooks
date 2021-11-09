@@ -1,25 +1,88 @@
-import logo from './logo.svg';
+import React,{ Component } from 'react';
+import Header from './components/header';
+import Footer from './components/footer';
+import Main from './components/main';
 import './App.css';
+import { getSources }  from './sources';
+import {getArticles } from './articles';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component{
 
-export default App;
+    state = {
+        newsSources: [],
+        errors: [],
+        selectedSource: { },
+        newsArticles:[]
+    }
+
+    async componentDidMount(){
+        const url = 'https://newsapi.org/v1/sources?language=en&apiKey=c493e95394d444458f3488052428deab' 
+        //connect to the api here
+        try{
+            const { data: newsSources } = await axios.get(url);
+            const sources = newsSources.sources;
+            this.setState({ newsSources:sources });
+        }
+        catch(error){
+            console.log(error);
+            const newsSources = getSources();
+            this.setState({newsSources});
+        }
+
+        handleNewsSourceSelectionChanged =(selected_source)=>{
+            //change the source and update state 
+            const sources  = [...this.state.newsSources];
+            const userSelectedSource = sources.find(source =>source.id === selected_source.trim());
+            this.setState({selectedSource: userSelectedSource})
+
+            // display articles from the selected source 
+            this.handleDisplayArticles(selected_source)
+        }
+
+        async handleDisplayArticles(selected_source){
+            //get articles from url based on source
+            const url = `https://newsapi.org/v1/articles?language=en&source=${selected_source}&apiKey=c493e95394d444458f3488052428deab`;
+
+            try{
+                const { data: sources } = await axios.get(url);
+                const articles = sources.articles;
+                this.setState({newsArticles: articles});
+            }
+            catch(ex){
+                //get sample data - static from sources.js - due to internet connection issues
+                const newsArticles = getArticles(selected_source);
+                console.log(newsArticles)
+                this.setState({newsArticles: newsArticles});
+                console.log( ex + ": Can't connect to the api end point") 
+                // if there are errors update the state
+                this.setState({errors: ex + "Can't connect to the api end point"});
+            }
+
+        }
+
+        render(){
+            return(
+                <React.Fragment>
+                <div className="container-fluid">
+                <Header  
+                newsSourceSelectionChanged ={this.handleNewsSourceSelectionChanged} 
+                sources ={this.state.newsSources} 
+                selectedSource ={this.state.selectedSource}
+                />
+                <Main  articles ={this.state.newsArticles}/>
+                <Footer />
+                </div>
+                </React.Fragment>
+            )
+        }
+    }
+    export default App;
+
+// function App() {
+  // return (
+    // <div className="App">
+    // </div>
+  // );
+// }
+// export default App;
