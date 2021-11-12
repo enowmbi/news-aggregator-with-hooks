@@ -3,7 +3,8 @@ import Header from './components/header';
 import Footer from './components/footer';
 import Main from './components/main';
 import './App.css';
-// import { getSources }  from './sources';
+import { getSources }  from './sources';
+import { getArticles }  from './articles';
 import Articles from './components/articles';
 import axios from 'axios';
 
@@ -26,8 +27,8 @@ class App extends Component{
         }
         catch(error){
             console.log(error);
-            // const newsSources = getSources();
-            // this.setState({newsSources});
+            const newsSources = getSources();
+            this.setState({newsSources});
         }
 
        const  handleNewsSourceSelectionChanged =(selected_source)=>{
@@ -51,9 +52,9 @@ class App extends Component{
             }
             catch(ex){
                 // get sample data - static from sources.js - due to internet connection issues
-                // const newsArticles = getArticles(selected_source);
-                // console.log(newsArticles)
-                // this.setState({newsArticles: newsArticles});
+                const newsArticles = getArticles(selected_source);
+                console.log(newsArticles)
+                this.setState({newsArticles: newsArticles});
                 console.log( ex + ": Can't connect to the api end point") 
                 // if there are errors update the state
                 this.setState({errors: ex + "Can't connect to the api end point"});
