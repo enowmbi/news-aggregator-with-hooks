@@ -18,12 +18,15 @@ class App extends Component{
     }
 
     componentDidMount(){
-        const url = 'https://newsapi.org/v1/sources?language=en&apiKey=c493e95394d444458f3488052428deab' 
+        const url = 'https://newsapi.org/v2/top-headlines?language=en&apiKey=c493e95394d444458f3488052428deab' 
         //connect to the api here
         try{
-            const { data: newsSources } = axios.get(url);
-            const sources = newsSources.sources;
-            this.setState({ newsSources:sources });
+            const promise = axios.get(url)
+            const promiseData = promise.response
+            console.log(promiseData)
+            // const sources = newsSources.sources;
+            // console.log(sources)
+            // this.setState({ newsSources:sources });
         }
         catch(error){
             console.log(error);
@@ -32,6 +35,7 @@ class App extends Component{
         }
 
        const  handleNewsSourceSelectionChanged =(selected_source)=>{
+           console.log(selected_source)
             //change the source and update state 
             const sources  = [...this.state.newsSources];
             const userSelectedSource = sources.find(source =>source.id === selected_source.trim());
@@ -42,8 +46,9 @@ class App extends Component{
         }
 
         const handleDisplayArticles=(selected_source)=>{
+            console.log(selected_source)
             //get articles from url based on source
-            const url = `https://newsapi.org/v1/articles?language=en&source=${selected_source}&apiKey=c493e95394d444458f3488052428deab`;
+            const url = `https://newsapi.org/v2/top-headlines?language=en&source=${selected_source}&apiKey=c493e95394d444458f3488052428deab`;
 
             try{
                 const { data: sources } = axios.get(url);
