@@ -85,10 +85,3 @@ class App extends Component{
     }
     export default App;
 
-// function App() {
-  // return (
-    // <div className="App">
-    // </div>
-  // );
-// }
-// export default App;
