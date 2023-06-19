@@ -1,6 +1,4 @@
-import React from 'react';
 import Article from '../components/article';
-
 
 const Articles = (props) =>{
     return(
